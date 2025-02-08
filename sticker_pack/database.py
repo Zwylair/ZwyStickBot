@@ -63,7 +63,7 @@ def get_editor(bot: Bot, user_id: int) -> StickerPackEditor | None:
     with db.get_closing_cursor() as cur:
         cur.execute("SELECT (selected_set_name) FROM editors WHERE user_id=?", (user_id, ))
         selected_set_name: str = utils.process_fetchone(cur.fetchone())
-    return None if selected_set_name else StickerPackEditor(bot, user_id, selected_set_name)
+    return None if selected_set_name is None else StickerPackEditor(bot, user_id, selected_set_name)
 
 
 def select_editor(editor: StickerPackEditor):
