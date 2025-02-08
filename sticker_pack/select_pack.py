@@ -49,9 +49,9 @@ async def send_sticker_pack_menu(query: CallbackQuery, editor: StickerPackEditor
     markup_builder = InlineKeyboardBuilder()
     markup_builder.max_width = 1
     markup_builder.button(text="🌟 Use pack", url=editor.get_link())
-    markup_builder.button(text="✏️ Rename", callback_data=EditorPackCallback(action="rename", sticker_pack=editor.sticker_pack_address))
-    markup_builder.button(text="🔳 Change frame", callback_data=EditorPackCallback(action="change_frame", sticker_pack=editor.sticker_pack_address))
-    markup_builder.button(text=delete_emoji + " Delete pack", callback_data=EditorPackCallback(action="delete", sticker_pack=editor.sticker_pack_address))
+    markup_builder.button(text="✏️ Rename", callback_data=EditorPackCallback(action="rename"))
+    markup_builder.button(text="🔳 Change frame", callback_data=EditorPackCallback(action="change_frame"))
+    markup_builder.button(text=delete_emoji + " Delete pack", callback_data=EditorPackCallback(action="delete"))
 
     await query.answer()
     await query.message.reply(

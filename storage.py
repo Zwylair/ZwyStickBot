@@ -27,8 +27,8 @@ class SelectPackCallback(CallbackData, prefix="selector"):
 
 class EditorPackCallback(CallbackData, prefix="editor"):
     action: str
-    sticker_pack: str
 
 
 PACK_CREATION_CACHE: dict[int, PackCreationData] = {}
 PACK_EDITORS_CACHE: dict[int, StickerPackEditor] = {}
+USERS_WAITING_FOR_RENAME_CACHE: list[int] = []

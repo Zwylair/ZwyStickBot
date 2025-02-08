@@ -9,11 +9,11 @@ logger = logging.getLogger(__name__)
 
 
 class StickerPackEditor:
-    def __init__(self, bot: Bot, user_id: int, sticker_pack_address: str, sticker_pack: StickerSet | None = None):
+    def __init__(self, bot: Bot, user_id: int, sticker_pack_address: str):
         self.bot = bot
         self.user_id = user_id
         self.sticker_pack_address = sticker_pack_address
-        self.sticker_pack = sticker_pack
+        self.sticker_pack: StickerSet | None = None
 
     @staticmethod
     async def create_new(bot: Bot, pack_data):
@@ -52,9 +52,17 @@ class StickerPackEditor:
     def get_link(self):
         return f"https://t.me/addstickers/{self.sticker_pack_address}"
 
+    async def change_title(self, new_title: str) -> bool:
+        """Returns True on success"""
+        return await self.bot.set_sticker_set_title(self.sticker_pack_address, new_title)
+
     async def add_sticker(self):
+        """Returns True on success"""
         ...
         # dummy handle
 
     async def fetch_sticker_set(self):
+        if self.sticker_pack is not None:
+            return
+
         self.sticker_pack = await self.bot.get_sticker_set(self.sticker_pack_address)

@@ -45,7 +45,7 @@ async def main():
 
     sticker_pack.setup(dp)
     message_handler.setup(dp)  # message handlers should be registered after anything else
-    await bot(DeleteWebhook(drop_pending_updates=True))  # skip updates
+    # await bot(DeleteWebhook(drop_pending_updates=True))  # skip updates
     await dp.start_polling(bot)
 
 

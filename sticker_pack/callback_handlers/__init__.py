@@ -1,10 +1,12 @@
 from aiogram import Dispatcher, F
 
+from message_handler import add_message_handler
 from sticker_pack.callback_handlers import rename_handler, delete_pack_handler, frame_change_handler
 from storage import EditorPackCallback
 
 
 def setup(dp: Dispatcher):
+    add_message_handler(rename_handler.message_handler)
     dp.callback_query.register(
         rename_handler.rename_handler,
         EditorPackCallback.filter(F.action == "rename")

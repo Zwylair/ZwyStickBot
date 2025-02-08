@@ -83,3 +83,15 @@ def select_editor(editor: StickerPackEditor):
             )
 
     PACK_EDITORS_CACHE.update({editor.user_id: editor})
+
+
+def is_user_waiting_for_rename(user_id: int) -> bool:
+    return USERS_WAITING_FOR_RENAME_CACHE.__contains__(user_id)
+
+
+def add_user_to_waiting_for_rename(user_id: int):
+    USERS_WAITING_FOR_RENAME_CACHE.append(user_id)
+
+
+def remove_user_from_waiting_for_rename(user_id: int):
+    USERS_WAITING_FOR_RENAME_CACHE.remove(user_id)
