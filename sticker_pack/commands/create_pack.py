@@ -36,32 +36,28 @@ async def message_handler(message: Message, dummy_update: DummyUpdate):
         sticker_pack_address += necessary_postfix
 
         if re.fullmatch("[a-zA-Z0-9_]+", sticker_pack_address) is None:
-            await message.answer("This address cannot be used. Only A-z, numerals and underscores")
+            await message.answer(text="This address cannot be used. Only A-z, numerals and underscores")
             return
 
         if len(sticker_pack_address) > 64:
             await message.answer(
-                f"Address '{sticker_pack_address}' cannot be longer than 64 symbols. Try again\n\n"
-                f"_The `{sticker_pack_address}` is necessary thing, without it Telegram wouldn't register pack 😞_"
+                text=f"Address '{sticker_pack_address}' cannot be longer than 64 symbols. Try again.\n\n"
+                     f"_The `{sticker_pack_address}` is necessary thing, without it Telegram won't register pack 😞_"
             )
             return
 
-        try:
-            await bot.get_sticker_set(sticker_pack_address)
-        except TelegramBadRequest:
-            pass
-        else:
-            await message.answer("This sticker pack already exists")
+        if await StickerPackEditor.exists(bot, sticker_pack_address):
+            await message.answer(text="This sticker pack already exists.")
             return
 
         pack_creation_data.address = sticker_pack_address
-        await message.answer("Enter new stickerpack name:")
+        await message.answer(text="Enter new stickerpack name:")
 
     elif pack_creation_data.title is None:
         sticker_pack_title = message.text
 
         if len(sticker_pack_title) > 64:
-            await message.answer("Title cannot be longer than 64 symbols. Try again")
+            await message.answer(text="Title cannot be longer than 64 symbols. Try again.")
             return
 
         pack_creation_data.title = sticker_pack_title
@@ -72,8 +68,9 @@ async def message_handler(message: Message, dummy_update: DummyUpdate):
         database.add_sticker_pack_to_user(chat_id, pack_creation_data.address)
 
         await message.reply(
-            f"❤\uFE0F Stickerpack [{pack_creation_data.title}](https://t.me/addstickers/{pack_creation_data.address}) was successfully created!"
+            text=f"❤\uFE0F Stickerpack [{pack_creation_data.title}](https://t.me/addstickers/{pack_creation_data.address}) was successfully created!"
         )
+
 
 async def create_pack(message: Message):
     bot = message.bot
@@ -85,8 +82,8 @@ async def create_pack(message: Message):
     PACK_CREATION_CACHE[chat_id] = PackCreationData(chat_id)
 
     await message.answer(
-        "Enter a link for new sticker pack:\n\n"
-        "_For example, this pack uses 'Animals' as short link: https://t.me/addstickers/Animals_"
+        text="Enter a link for new sticker pack:\n\n"
+             "_For example, this pack uses 'Animals' as short link: https://t.me/addstickers/Animals_"
     )
 
 

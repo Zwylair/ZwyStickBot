@@ -66,6 +66,14 @@ def get_editor(bot: Bot, user_id: int) -> StickerPackEditor | None:
     return None if selected_set_name is None else StickerPackEditor(bot, user_id, selected_set_name)
 
 
+def remove_editor(editor: StickerPackEditor):
+    if editor.user_id in PACK_EDITORS_CACHE:
+        PACK_EDITORS_CACHE.pop(editor.user_id)
+
+    with db.get_closing_cursor() as cur:
+        cur.execute("DELETE FROM editors WHERE user_id=?", (editor.user_id, ))
+
+
 def select_editor(editor: StickerPackEditor):
     with db.get_closing_cursor() as cur:
         cur.execute("SELECT (selected_set_name) FROM editors WHERE user_id=?", (editor.user_id, ))

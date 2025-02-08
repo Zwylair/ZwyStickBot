@@ -1,5 +1,6 @@
 import logging
 
+import aiogram.exceptions
 from aiogram import Bot
 from aiogram.types import StickerSet, InputSticker, FSInputFile
 
@@ -49,6 +50,15 @@ class StickerPackEditor:
             sticker_pack_address=pack_data.address
         )
 
+    @staticmethod
+    async def exists(bot: Bot, sticker_pack_address: str) -> bool:
+        try:
+            await bot.get_sticker_set(sticker_pack_address)
+        except aiogram.exceptions.TelegramBadRequest:
+            return False
+        else:
+            return True
+
     def get_link(self):
         return f"https://t.me/addstickers/{self.sticker_pack_address}"
 
@@ -66,3 +76,15 @@ class StickerPackEditor:
             return
 
         self.sticker_pack = await self.bot.get_sticker_set(self.sticker_pack_address)
+
+    async def delete_pack(self):
+        from sticker_pack import database
+
+        """Returns True if success"""
+
+        success = await self.bot.delete_sticker_set(self.sticker_pack_address)
+        if not success:
+            return False
+
+        database.remove_editor(self)
+        return True

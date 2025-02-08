@@ -1,4 +1,5 @@
 from aiogram import Dispatcher
+from aiogram.filters import Command
 
 from message_handler import add_message_handler
 import sticker_pack.media_handler
@@ -15,4 +16,8 @@ def setup(dp: Dispatcher):
     dp.callback_query.register(
         sticker_pack.select_pack.choose_pack_inline_callback_handler,
         SelectPackCallback.filter()
+    )
+    dp.message.register(
+        sticker_pack.select_pack.send_pack_selector,
+        Command("send_selector")
     )

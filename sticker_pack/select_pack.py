@@ -32,12 +32,16 @@ async def send_pack_selector(message: Message):
     markup_builder.max_width = 1
 
     for sticker_pack_address in sticker_packs:
+        if not await StickerPackEditor.exists(bot, sticker_pack_address):
+            database.remove_sticker_pack_from_db(chat_id, sticker_pack_address)
+            continue
+
         sticker_set = await bot.get_sticker_set(sticker_pack_address)
         callback_data = SelectPackCallback(sticker_pack=sticker_pack_address, reply_to=message.message_id)
         markup_builder.button(text=sticker_set.title, callback_data=callback_data)
 
     await message.reply(
-        "First of all, you have to choose pack for editing:",
+        text="First of all, you have to choose pack for editing:",
         reply_markup=markup_builder.as_markup()
     )
 
