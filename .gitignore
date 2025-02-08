@@ -162,4 +162,7 @@ cython_debug/
 *build
 *dist
 test*
-[db|database].[sql|sqlite]
+db.sql
+db.sqlite
+database.sql
+database.sqlite
