@@ -94,12 +94,27 @@ def select_editor(editor: StickerPackEditor):
 
 
 def is_user_waiting_for_rename(user_id: int) -> bool:
-    return USERS_WAITING_FOR_RENAME_CACHE.__contains__(user_id)
+    if user_id in USERS_WAITING_FOR_RENAME_CACHE:
+        return True
+
+    with db.get_closing_cursor() as cur:
+        cur.execute("SELECT (user_id) FROM users_waiting_for_rename WHERE user_id=?", (user_id,))
+        result = cur.fetchone()
+    return result is not None
 
 
 def add_user_to_waiting_for_rename(user_id: int):
     USERS_WAITING_FOR_RENAME_CACHE.append(user_id)
 
+    with db.get_closing_cursor() as cur:
+        cur.execute("SELECT (user_id) FROM users_waiting_for_rename WHERE user_id=?", (user_id, ))
+        if cur.fetchone() is None:
+            cur.execute("INSERT INTO users_waiting_for_rename (user_id) VALUES (?)",(user_id, ))
+
 
 def remove_user_from_waiting_for_rename(user_id: int):
-    USERS_WAITING_FOR_RENAME_CACHE.remove(user_id)
+    if user_id in USERS_WAITING_FOR_RENAME_CACHE:
+        USERS_WAITING_FOR_RENAME_CACHE.remove(user_id)
+
+    with db.get_closing_cursor() as cur:
+        cur.execute("DELETE FROM users_waiting_for_rename WHERE user_id=?",(user_id, ))

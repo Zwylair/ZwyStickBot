@@ -6,7 +6,7 @@ import dotenv
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
-from aiogram.methods import DeleteWebhook
+# from aiogram.methods import DeleteWebhook
 
 import db
 import sticker_pack
@@ -40,6 +40,7 @@ async def main():
             )
             """.strip()
         )
+        cur.execute("""CREATE TABLE IF NOT EXISTS users_waiting_for_rename (user_id INT)""")
 
     bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.MARKDOWN))
 
