@@ -28,6 +28,7 @@ async def main():
         cur.execute("CREATE TABLE IF NOT EXISTS editors (user_id INT, selected_set_name TEXT)")
         cur.execute("CREATE TABLE IF NOT EXISTS users_waiting_for_rename (user_id INT)")
         cur.execute("CREATE TABLE IF NOT EXISTS frame_type (sticker_pack_address TEXT, frame_type INT)")
+        cur.execute("CREATE TABLE IF NOT EXISTS added_sticker_recently (user_id INT, sticker_file_id TEXT)")
 
     bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.MARKDOWN))
 

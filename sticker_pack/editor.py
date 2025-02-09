@@ -123,28 +123,29 @@ class StickerPackEditor:
             emoji_list=emoji_list
         )
 
-    async def add_sticker(self, sticker: InputSticker) -> Sticker:
+    async def add_sticker(self, sticker: InputSticker) -> Sticker | None:
         """Returns True on success"""
 
         bot = self.bot
         user_id = self.user_id
+        sticker_pack = await self.fetch_sticker_set()
 
-        await self.fetch_sticker_set()
-        sticker_pack = self.sticker_pack
+        if len(sticker_pack.stickers) == 200:
+            await bot.send_message(chat_id=user_id, text="You reached the limits of stickers in the pack.")
+            return
 
         await bot.add_sticker_to_set(user_id, self.sticker_pack_address, sticker)
         if len(sticker_pack.stickers) == 2:
             first_sticker_file = await bot.download(sticker_pack.stickers[0].file_id, BytesIO())
             if is_dummy_sticker(first_sticker_file):
                 await bot.delete_sticker_from_set(sticker_pack.stickers[0].file_id)
-        await self.fetch_sticker_set()
+
+        sticker_pack = await self.fetch_sticker_set()
         return sticker_pack.stickers[-1]
 
-    async def fetch_sticker_set(self):
-        if self.sticker_pack is not None:
-            return
-
+    async def fetch_sticker_set(self) -> StickerSet:
         self.sticker_pack = await self.bot.get_sticker_set(self.sticker_pack_address)
+        return self.sticker_pack
 
     async def delete_pack(self):
         from sticker_pack import database

@@ -77,7 +77,10 @@ async def message_handler(message: Message, dummy_update: DummyUpdate):
         return
 
     added_sticker = await editor.add_sticker(input_sticker)
+    if added_sticker is None:
+        return
     database.add_user_to_added_sticker_recently(chat_id, added_sticker.file_id)
+
     await message.reply(
         text="*Sticker was successfully added!*\n"
              f"[\n]({editor.get_link()})"

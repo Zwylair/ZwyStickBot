@@ -148,15 +148,37 @@ def dump_sticker_pack_frame_type(sticker_pack_address: str, frame_type: int):
 def add_user_to_added_sticker_recently(user_id: int, sticker_file_id: str):
     ADDED_STICKER_RECENTLY[user_id] = sticker_file_id
 
+    with db.get_closing_cursor() as cur:
+        cur.execute("SELECT (user_id) FROM added_sticker_recently WHERE user_id=?", (user_id, ))
+        if cur.fetchone() is None:
+            cur.execute("INSERT INTO added_sticker_recently (user_id, sticker_file_id) VALUES (?, ?)", (user_id, sticker_file_id))
+        else:
+            cur.execute("UPDATE added_sticker_recently SET sticker_file_id=? WHERE user_id=?", (sticker_file_id, user_id))
+
 
 def remove_user_from_added_sticker_recently(user_id: int):
     if user_id in ADDED_STICKER_RECENTLY:
         ADDED_STICKER_RECENTLY.pop(user_id)
 
+    with db.get_closing_cursor() as cur:
+        cur.execute("DELETE FROM added_sticker_recently WHERE user_id=?",(user_id, ))
+
 
 def is_user_in_added_sticker_recently(user_id: int):
-    return user_id in ADDED_STICKER_RECENTLY
+    if user_id in ADDED_STICKER_RECENTLY:
+        return True
+
+    with db.get_closing_cursor() as cur:
+        cur.execute("SELECT (user_id) FROM added_sticker_recently WHERE user_id=?", (user_id,))
+        result = cur.fetchone()
+    return result is not None
 
 
 def get_sticker_from_added_recently_cache(user_id: int) -> str | None:
-    return ADDED_STICKER_RECENTLY.get(user_id)
+    if user_id in ADDED_STICKER_RECENTLY:
+        return ADDED_STICKER_RECENTLY.get(user_id)
+
+    with db.get_closing_cursor() as cur:
+        cur.execute("SELECT (sticker_file_id) FROM added_sticker_recently WHERE user_id=?", (user_id, ))
+        result = utils.process_fetchone(cur.fetchone())
+    return None if result is None else result
