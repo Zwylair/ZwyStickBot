@@ -34,6 +34,22 @@ class DeletePackCallback(CallbackData, prefix="del"):
     delete_propose_message_id: int
 
 
+class FrameSelectorCallback(CallbackData, prefix="frame_selector"):
+    frame_type: int
+    cancel: bool
+    selector_message_id: int
+
+
+@dataclass
+class FrameTypes:
+    LITE = 1
+    MEDIUM = 2
+    ROUNDED = 3
+    SQUARE = 4
+    CIRCLE = 5
+
+
 PACK_CREATION_CACHE: dict[int, PackCreationData] = {}
 PACK_EDITORS_CACHE: dict[int, StickerPackEditor] = {}
 USERS_WAITING_FOR_RENAME_CACHE: list[int] = []
+STICKER_PACK_FRAME_TYPE_CACHE: dict[str, int] = {}

@@ -43,6 +43,7 @@ class StickerPackEditor:
                 pack_data.user_id,
                 "Something went wrong..."
             )
+            return
 
         return StickerPackEditor(
             bot,
@@ -69,6 +70,7 @@ class StickerPackEditor:
     async def add_sticker(self):
         """Returns True on success"""
         ...
+        # TODO: handle frame_type is None
         # dummy handle
 
     async def fetch_sticker_set(self):

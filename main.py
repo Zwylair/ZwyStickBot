@@ -24,23 +24,10 @@ dp = Dispatcher()
 async def main():
     db.init()
     with db.get_closing_cursor() as cur:
-        cur.execute(
-            """
-            CREATE TABLE IF NOT EXISTS sticker_packs (
-                user_id INT,
-                sticker_packs TEXT
-            )
-            """.strip()
-        )
-        cur.execute(
-            """
-            CREATE TABLE IF NOT EXISTS editors (
-                user_id INT,
-                selected_set_name TEXT
-            )
-            """.strip()
-        )
-        cur.execute("""CREATE TABLE IF NOT EXISTS users_waiting_for_rename (user_id INT)""")
+        cur.execute("CREATE TABLE IF NOT EXISTS sticker_packs (user_id INT, sticker_packs TEXT)")
+        cur.execute("CREATE TABLE IF NOT EXISTS editors (user_id INT, selected_set_name TEXT)")
+        cur.execute("CREATE TABLE IF NOT EXISTS users_waiting_for_rename (user_id INT)")
+        cur.execute("CREATE TABLE IF NOT EXISTS frame_type (sticker_pack_address TEXT, frame_type INT)")
 
     bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.MARKDOWN))
 

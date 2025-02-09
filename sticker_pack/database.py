@@ -118,3 +118,28 @@ def remove_user_from_waiting_for_rename(user_id: int):
 
     with db.get_closing_cursor() as cur:
         cur.execute("DELETE FROM users_waiting_for_rename WHERE user_id=?",(user_id, ))
+
+
+def get_sticker_pack_frame_type(sticker_pack_address: str) -> int | None:
+    if sticker_pack_address in STICKER_PACK_FRAME_TYPE_CACHE:
+        return STICKER_PACK_FRAME_TYPE_CACHE[sticker_pack_address]
+
+    with db.get_closing_cursor() as cur:
+        cur.execute("SELECT (frame_type) FROM frame_type WHERE sticker_pack_address=?", (sticker_pack_address,))
+        result = utils.process_fetchone(cur.fetchone())
+    return None if result is None else result
+
+
+def dump_sticker_pack_frame_type(sticker_pack_address: str, frame_type: int):
+    STICKER_PACK_FRAME_TYPE_CACHE[sticker_pack_address] = frame_type
+
+    with db.get_closing_cursor() as cur:
+        cur.execute("SELECT (frame_type) FROM frame_type WHERE sticker_pack_address=?", (sticker_pack_address, ))
+
+        if cur.fetchone() is None:
+            cur.execute("INSERT INTO frame_type (sticker_pack_address, frame_type) VALUES (?, ?)",(sticker_pack_address, frame_type))
+        else:
+            cur.execute(
+                "UPDATE frame_type SET frame_type=? WHERE sticker_pack_address=?",
+                (frame_type, sticker_pack_address)
+            )
