@@ -53,3 +53,4 @@ PACK_CREATION_CACHE: dict[int, PackCreationData] = {}
 PACK_EDITORS_CACHE: dict[int, StickerPackEditor] = {}
 USERS_WAITING_FOR_RENAME_CACHE: list[int] = []
 STICKER_PACK_FRAME_TYPE_CACHE: dict[str, int] = {}
+ADDED_STICKER_RECENTLY: dict[int, str] = {}

@@ -1,13 +1,9 @@
 import logging
 import re
 
-from aiogram import Dispatcher
-from aiogram.exceptions import TelegramBadRequest
-from aiogram.filters import Command
 from aiogram.types import Message
 
 from sticker_pack import database
-from message_handler import add_message_handler
 from storage import *
 
 logger = logging.getLogger(__name__)
@@ -79,14 +75,10 @@ async def create_pack(message: Message):
     if message.chat.type != "private":
         return
 
+    database.remove_user_from_added_sticker_recently(chat_id)
     PACK_CREATION_CACHE[chat_id] = PackCreationData(chat_id)
 
     await message.answer(
         text="Enter a link for new sticker pack:\n\n"
              "_For example, this pack uses 'Animals' as short link: https://t.me/addstickers/Animals_"
     )
-
-
-def setup(dp: Dispatcher):
-    dp.message.register(create_pack, Command("create_pack"))
-    add_message_handler(message_handler)

@@ -1,2 +1,7 @@
-aiogram
-python-dotenv
+aiogram~=3.17.0
+python-dotenv~=1.0.1
+pillow~=11.1.0
+moviepy~=2.1.2
+imageio[ffmpeg]~=2.37.0
+imageio-ffmpeg~=0.6.0
+emoji~=2.14.1

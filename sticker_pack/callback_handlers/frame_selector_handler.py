@@ -13,6 +13,9 @@ logger = logging.getLogger(__name__)
 async def change_frame_handler(query: CallbackQuery):
     bot = query.bot
     chat_id = query.message.chat.id
+
+    database.remove_user_from_added_sticker_recently(chat_id)
+
     selector_message = await bot.send_message(
         chat_id=chat_id,
         text="Frame is a transparent background around the sticker. Choose wanted frame type:",
@@ -37,6 +40,8 @@ async def cancel_change_frame_handler(query: CallbackQuery):
     chat_id = query.message.chat.id
     selector_message_id = FrameSelectorCallback.unpack(query.data).selector_message_id
 
+    database.remove_user_from_added_sticker_recently(chat_id)
+
     await query.answer()
     await bot.edit_message_text(chat_id=chat_id, message_id=selector_message_id, text="Frame changing canceled.")
 
@@ -47,6 +52,7 @@ async def frame_selector_handler(query: CallbackQuery):
     callback_data = FrameSelectorCallback.unpack(query.data)
     editor = database.get_editor(bot, chat_id)
 
+    database.remove_user_from_added_sticker_recently(chat_id)
     database.dump_sticker_pack_frame_type(editor.sticker_pack_address, callback_data.frame_type)
 
     await query.answer()

@@ -35,6 +35,8 @@ async def rename_handler(query: CallbackQuery):
     bot = query.bot
     chat_id = query.message.chat.id
 
+    database.remove_user_from_added_sticker_recently(chat_id)
+
     await query.answer()
     await bot.send_message(chat_id=chat_id, text="Send new title for your sticker pack:")
     database.add_user_to_waiting_for_rename(chat_id)

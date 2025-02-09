@@ -25,6 +25,8 @@ async def send_pack_selector(message: Message):
     bot = message.bot
     chat_id = message.from_user.id
 
+    database.remove_user_from_added_sticker_recently(chat_id)
+
     # TODO: maybe someday remove the limit of 9 displayed packs
     sticker_packs = database.get_user_sticker_packs(chat_id)[:9]
 
@@ -47,6 +49,7 @@ async def send_pack_selector(message: Message):
 
 
 async def send_sticker_pack_menu(query: CallbackQuery, editor: StickerPackEditor):
+    database.remove_user_from_added_sticker_recently(query.message.chat.id)
     await editor.fetch_sticker_set()
 
     delete_emoji = "💔" if random.randint(1, 10) <= 9 else "😔"

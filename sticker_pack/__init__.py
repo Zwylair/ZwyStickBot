@@ -11,6 +11,7 @@ from storage import SelectPackCallback
 
 def setup(dp: Dispatcher):
     add_message_handler(sticker_pack.media_handler.message_handler)
+    add_message_handler(sticker_pack.media_handler.change_emoji_handler)
     sticker_pack.commands.setup(dp)
     sticker_pack.callback_handlers.setup(dp)
     dp.callback_query.register(

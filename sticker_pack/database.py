@@ -143,3 +143,20 @@ def dump_sticker_pack_frame_type(sticker_pack_address: str, frame_type: int):
                 "UPDATE frame_type SET frame_type=? WHERE sticker_pack_address=?",
                 (frame_type, sticker_pack_address)
             )
+
+
+def add_user_to_added_sticker_recently(user_id: int, sticker_file_id: str):
+    ADDED_STICKER_RECENTLY[user_id] = sticker_file_id
+
+
+def remove_user_from_added_sticker_recently(user_id: int):
+    if user_id in ADDED_STICKER_RECENTLY:
+        ADDED_STICKER_RECENTLY.pop(user_id)
+
+
+def is_user_in_added_sticker_recently(user_id: int):
+    return user_id in ADDED_STICKER_RECENTLY
+
+
+def get_sticker_from_added_recently_cache(user_id: int) -> str | None:
+    return ADDED_STICKER_RECENTLY.get(user_id)

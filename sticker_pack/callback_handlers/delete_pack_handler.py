@@ -14,6 +14,8 @@ async def delete_pack_handler(query: CallbackQuery):
     bot = query.bot
     chat_id = query.message.chat.id
 
+    database.remove_user_from_added_sticker_recently(chat_id)
+
     delete_propose_message = await bot.send_message(chat_id, text=f"Are you sure you wanna delete this pack?")
 
     markup_builder = InlineKeyboardBuilder()
@@ -53,6 +55,8 @@ async def cancel_delete_pack_handler(query: CallbackQuery):
     chat_id = query.message.chat.id
     delete_propose_message_id = DeletePackCallback.unpack(query.data).delete_propose_message_id
 
+    database.remove_user_from_added_sticker_recently(chat_id)
+
     await query.answer()
     await bot.edit_message_text(chat_id=chat_id, message_id=delete_propose_message_id, text="Pack deletion canceled.")
 
@@ -62,6 +66,8 @@ async def second_delete_pack_handler(query: CallbackQuery):
     chat_id = query.message.chat.id
     delete_propose_message_id = DeletePackCallback.unpack(query.data).delete_propose_message_id
     editor = database.get_editor(bot, chat_id)
+
+    database.remove_user_from_added_sticker_recently(chat_id)
 
     if editor is None:
         await query.answer()
