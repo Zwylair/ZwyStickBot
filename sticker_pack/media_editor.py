@@ -94,7 +94,7 @@ def resize_video(video_bytes: bytes) -> bytes | None:
             "-b:v", "500k",  # Set bitrate for video (500kbit/s)
             "-movflags", "+faststart",
             "-an",  # Mute
-            "-t", "3",  # Limit the video to 3 seconds
+            "-t", "2.94",  # Limit the video to ~3 seconds
             "-f", "webm",
             "-loglevel", "quiet",  # Disabling logging
             temp_output_path
