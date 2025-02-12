@@ -33,8 +33,8 @@ def is_video_supported(file: bytes) -> bool:
 
         os.remove(temporary_file.name)
         return True
-    except OSError as e:
-        logger.error("Error on decoding video", exc_info=e)
+    except OSError:
+        logger.error("Error on decoding video")
         return False
 
 
