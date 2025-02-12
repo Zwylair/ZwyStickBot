@@ -70,9 +70,13 @@ async def message_handler(message: Message, dummy_update: DummyUpdate):
         file = await bot.download(message.video.file_id, BytesIO())
         input_sticker = await editor.upload_sticker(file.read())
     elif message.document is not None:
-        file = await bot.download(message.video.file_id, BytesIO())
+        file = await bot.download(message.document.file_id, BytesIO())
         input_sticker = await editor.upload_sticker(file.read())
     else:
+        await message.reply(text="It doesn't seems like a media for sticker.")
+        return
+
+    if input_sticker is None:
         await message.reply(text="It doesn't seems like a media for sticker.")
         return
 
@@ -83,9 +87,7 @@ async def message_handler(message: Message, dummy_update: DummyUpdate):
 
     await message.reply(
         text="*Sticker was successfully added!*\n"
-             f"[\n]({editor.get_link()})"
-             "\n"
              "Within an hour, this pack will be updated for all users\n"
-             "\n"
+             f"[\n]({editor.get_link()})"
              "_Send one or more emoji that I will attach to the sticker, if you want_"
     )
